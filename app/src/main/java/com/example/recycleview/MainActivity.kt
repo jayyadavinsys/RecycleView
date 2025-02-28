@@ -1,29 +1,30 @@
 package com.example.recycleview
 
+
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Recycler
 
 
-class MainActivity : AppCompatActivity() {
-    var list= ArrayList<ContactModel>();
-    lateinit var recyclId:RecyclerView
+class MainActivity : AppCompatActivity(), onClickListener {
+    private var list= ArrayList<ContactModel>()
+    private lateinit var recycleId:RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+    enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        recyclId=findViewById<RecyclerView>(R.id.recyclerCont)
+        recycleId=findViewById(R.id.recyclerCont)
 
-        recyclId.layoutManager= LinearLayoutManager(this)
+        recycleId.layoutManager= LinearLayoutManager(this).apply {
+            orientation=LinearLayoutManager.VERTICAL
+        }
         
-        var c1=ContactModel(R.drawable.a, "A", "7685943002")
-        var c2=ContactModel(R.drawable.b, "B", "48039743985")
-        var c3= ContactModel(R.drawable.c,"C", "8329014793")
+        val c1=ContactModel(R.drawable.a, "A", "7685943002")
+        val c2=ContactModel(R.drawable.b, "B", "48039743985")
+        val c3= ContactModel(R.drawable.c,"C", "8329014793")
         list.add(c1)
         list.add(c2)
         list.add(c3)
@@ -41,9 +42,19 @@ class MainActivity : AppCompatActivity() {
         list.add(ContactModel(R.drawable.sd,"FG", "904705839"))
         list.add(ContactModel(R.drawable.xx,"FF", "9047705839"))
 
-        var adptor= RecyclerContactAdapter(this, list)
+        val adaptor= RecyclerContactAdapter(
+            this, list, this)
 
-      recyclId.adapter=adptor
+      recycleId.adapter=adaptor
 
+    }
+
+   // @SuppressLint("SuspiciousIndentation")
+    override fun onItemClick(position: Int) {
+      var intent= Intent(this, MainActivity2::class.java)
+        intent.putExtra("Img", list[position].img)
+        intent.putExtra("Name", list[position].name)
+        intent.putExtra("Num", list[position].number)
+        startActivity(intent)
     }
 }
